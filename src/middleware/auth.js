@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const User = require('../models/user.js');
 
 const authonticate = (req, res, next) => {
     try {
         const token = req.header('Authorization');
-        const user = jwt.verify(token, 'privetekey');
+        const user = jwt.verify(token, process.env.PRIVET_KEY);
 
         User.findByPk(user.UserId)
             .then(user => {
