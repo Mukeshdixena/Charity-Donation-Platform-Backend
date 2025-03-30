@@ -1,5 +1,5 @@
-const user = require('../models/user.js');
-const { Sequelize } = require('sequelize'); // Ensure Sequelize is imported
+const User = require('../models/user.js');
+const { Sequelize } = require('sequelize');
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -7,7 +7,7 @@ function generateAccestoken(id, name) {
     return jwt.sign({ UserId: id, name: name }, process.env.PRIVET_KEY)
 }
 exports.getUser = async (req, res, next) => {
-    const thisUsers = await user.findAll()
+    const thisUsers = await User.findAll()
     if (!thisUsers) {
         return res.status(404).json({ message: 'User not found' });
     }
@@ -16,7 +16,7 @@ exports.getUser = async (req, res, next) => {
 
 
 exports.getUserById = async (req, res, next) => {
-    const thisUser = await user.findByPk(req.user.id)
+    const thisUser = await User.findByPk(req.user.id)
 
     if (!thisUser) {
         return res.status(404).json({ message: 'User not found' });
@@ -33,7 +33,7 @@ exports.postUser = async (req, res, next) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Create user
-        const newUser = await user.create({
+        const newUser = await User.create({
             username,
             email,
             contact,
@@ -56,7 +56,7 @@ exports.deleteUser = (req, res, next) => {
     }
 
 
-    user.findByPk(UserId)
+    User.findByPk(UserId)
         .then(user => {
             if (!user) {
                 return res.status(404).json({ message: 'user not found' });
@@ -76,15 +76,13 @@ exports.editUser = async (req, res, next) => {
     try {
         const { username, email, contact } = req.body;
 
-        console.log("working");
-        console.log(username, email, contact);
-        console.log(req.user.id);
+
 
         if (!req.user.id) {
             return res.status(400).json({ message: 'not found' });
         }
 
-        const userRecord = await user.findByPk(req.user.id);
+        const userRecord = await User.findByPk(req.user.id);
         if (!userRecord) {
             return res.status(404).json({ message: 'user not found' });
         }
@@ -100,7 +98,7 @@ exports.signin = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const currUser = await user.findOne({ where: { email } });
+        const currUser = await User.findOne({ where: { email } });
         if (!currUser) {
             return res.json({ success: false, message: 'Email not found' });
         }

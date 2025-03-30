@@ -1,8 +1,8 @@
-const charityOrg = require('../models/charityOrg.js');
+const CharityOrg = require('../models/charityOrg.js');
 const { Sequelize } = require('sequelize');
 
 exports.getCharityOrgs = async (req, res, next) => {
-    const thisCharityOrgs = await charityOrg.findAll()
+    const thisCharityOrgs = await CharityOrg.findAll()
     if (!thisCharityOrgs) {
         return res.status(404).json({ message: 'CharityOrg not found' });
     }
@@ -12,7 +12,7 @@ exports.getCharityOrgs = async (req, res, next) => {
 
 exports.getCharityOrgById = async (req, res, next) => {
     const { charityOrgId } = req.params;
-    const thisCharityOrg = await charityOrg.findByPk(charityOrgId)
+    const thisCharityOrg = await CharityOrg.findByPk(charityOrgId)
 
     if (!thisCharityOrg) {
         return res.status(404).json({ message: 'CharityOrg not found' });
@@ -27,7 +27,7 @@ exports.postCharityOrg = async (req, res, next) => {
         const { name, description, requiredAmount, category, location } = req.body;
 
 
-        const newCharityOrg = await charityOrg.create({
+        const newCharityOrg = await CharityOrg.create({
             name, description, requiredAmount, category, location
         });
         res.status(201).json(newCharityOrg);
@@ -47,7 +47,7 @@ exports.deleteCharityOrg = async (req, res, next) => {
             return res.status(400).json({ message: 'CharityOrgId is required' });
         }
 
-        const charityOrgRecord = await charityOrg.findByPk(CharityOrgId);
+        const charityOrgRecord = await CharityOrg.findByPk(CharityOrgId);
         if (!charityOrgRecord) {
             return res.status(404).json({ message: 'charityOrg not found' });
         }
@@ -69,7 +69,7 @@ exports.editCharityOrg = async (req, res, next) => {
             return res.status(400).json({ message: 'not found' });
         }
 
-        const charityOrgRecord = await charityOrg.findByPk(CharityOrgId);
+        const charityOrgRecord = await CharityOrg.findByPk(CharityOrgId);
         if (!charityOrgRecord) {
             return res.status(404).json({ message: 'charityOrg not found' });
         }
