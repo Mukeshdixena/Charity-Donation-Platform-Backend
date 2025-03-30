@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const app = express();
 const user = require('./src/models/user.js')
+const charityOrg = require('./src/models/charityOrg.js')
 
 
 require('dotenv').config();
@@ -23,9 +24,11 @@ const PORT = process.env.PORT || 3000;
 const sequelize = require('./src/util/database.js');
 
 const userRouter = require('./src/router/userRouter.js');
+const charityOrgRouter = require('./src/router/charityOrgRouter.js');
 
 
 app.use(userRouter);
+app.use(charityOrgRouter);
 
 app.get("/", (req, res) => {
     res.send("jenkins Development, Express!");
