@@ -1,5 +1,8 @@
+const CharityOrg = require('../models/charityOrg.js');
 const donation = require('../models/donation.js');
 const { Sequelize } = require('sequelize');
+
+const { uploadToS3 } = require('../service/awsS3Service');
 
 exports.getDonations = async (req, res, next) => {
     const thisDonations = await donation.findAll()
@@ -39,7 +42,7 @@ exports.getDonationByUser = async (req, res, next) => {
     }
 };
 
-exports.getDonationByUser = async (req, res, next) => {
+exports.getDonationByCharityOrg = async (req, res, next) => {
     const charityOrgId = req.params;
 
     try {
@@ -60,14 +63,28 @@ exports.getDonationByUser = async (req, res, next) => {
 
 exports.postDonation = async (req, res, next) => {
     try {
-
         const userId = req.user.id;
+        const { paymentId, amountDonated, charityOrgId } = req.body;
 
-        const { amountDonated, charityOrgId } = req.body;
+        // Find the charity organization
+        const charityOrg = await CharityOrg.findByPk(charityOrgId);
 
+        if (!charityOrg) {
+            return res.status(404).json({ message: 'Charity organization not found!' });
+        }
+
+        // Create the donation
         const newDonation = await donation.create({
-            amountDonated, charityOrgId, userId
+            paymentId,
+            amountDonated,
+            charityOrgId,
+            userId
         });
+
+        // Reduce the required amount by the donated amount
+        charityOrg.requiredAmount -= amountDonated;
+        await charityOrg.save(); // Save the updated charityOrg record
+
         res.status(201).json(newDonation);
     } catch (err) {
         console.error(err);
@@ -75,3 +92,27 @@ exports.postDonation = async (req, res, next) => {
     }
 };
 
+exports.getDonationFile = async (req, res, next) => {
+    try {
+        const donations = await donation.findAll({ where: { UserId: req.user.id } });
+
+        if (!donations.length) {
+            return res.status(404).json({ message: 'No donations found', success: false });
+        }
+
+        const stringifiedExpenses = JSON.stringify(donations, null, 2);
+        const userId = req.user.id;
+        const fileName = `Donation_${userId}_${new Date().toISOString().replace(/[:.]/g, "-")}.txt`;
+
+        const fileUrl = await uploadToS3(stringifiedExpenses, fileName);
+        if (!fileUrl) throw new Error("Failed to upload file to S3");
+
+        console.log({ FileUrl: fileUrl, UserId: userId });
+        // await ExpenseDownload.create({ fileUrl, UserId: userId });
+
+        res.status(200).json({ fileUrl, success: true });
+    } catch (error) {
+        console.error("Error generating expense file:", error);
+        res.status(500).json({ message: 'Something went wrong!', success: false });
+    }
+};

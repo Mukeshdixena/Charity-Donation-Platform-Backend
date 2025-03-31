@@ -11,5 +11,5 @@ router.post('/api/postUser', userController.postUser);
 router.delete('/api/deleteUser/:UserId', userController.deleteUser);
 router.patch('/api/editUser', userAuth.authonticate, userController.editUser);
 router.post('/api/signin', userController.signin);
-
+router.patch('/api/postUserPass', userController.postUserPass);
 module.exports = router;

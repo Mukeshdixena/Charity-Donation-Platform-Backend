@@ -12,6 +12,7 @@ exports.getCharityOrgs = async (req, res, next) => {
 
 exports.getCharityOrgById = async (req, res, next) => {
     const { charityOrgId } = req.params;
+    console.log("charity by id : ", charityOrgId);
     const thisCharityOrg = await CharityOrg.findByPk(charityOrgId)
 
     if (!thisCharityOrg) {

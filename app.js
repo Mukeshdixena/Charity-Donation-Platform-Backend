@@ -5,7 +5,7 @@ const app = express();
 const User = require('./src/models/user.js')
 const CharityOrg = require('./src/models/charityOrg.js')
 const Donation = require('./src/models/donation.js')
-
+const Passwords = require('./src/models/passwords.js')
 
 require('dotenv').config();
 
@@ -27,15 +27,16 @@ const sequelize = require('./src/util/database.js');
 const userRouter = require('./src/router/userRouter.js');
 const charityOrgRouter = require('./src/router/charityOrgRouter.js');
 const paymentService = require('./src/router/paymentService.js');
+const donationRouter = require('./src/router/donationRouter.js');
 
 app.use(userRouter);
+app.use(donationRouter);
 app.use(paymentService);
 app.use(charityOrgRouter);
 
-User.belongsToMany(CharityOrg, { through: Donation });
-CharityOrg.belongsToMany(User, { through: Donation });
 
-
+User.hasMany(Passwords);
+Passwords.belongsTo(User);
 
 app.get("/", (req, res) => {
     res.send("jenkins Development, Express!");

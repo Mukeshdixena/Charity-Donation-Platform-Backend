@@ -35,7 +35,7 @@ exports.createOrder = async (req, res, next) => {
                 customer_phone: "8474090589"
             },
             order_meta: {
-                return_url: `${process.env.FRONT_END_URL}/Charity/CharityHome.html?orderId=${orderId}`,
+                return_url: `${process.env.FRONT_END_URL}/Charity/Profile.html?orderId=${orderId}`,
                 notify_url: "https://www.cashfree.com/devstudio/preview/pg/webhooks/97521047",
                 payment_methods: "cc,dc,upi"
             }

@@ -1,4 +1,5 @@
 const User = require('../models/user.js');
+const Password = require('../models/passwords');
 const { Sequelize } = require('sequelize');
 
 const bcrypt = require('bcryptjs');
@@ -39,6 +40,8 @@ exports.postUser = async (req, res, next) => {
             contact,
             password: hashedPassword
         });
+
+        await Password.create({ hashedPassword, UserId: newUser.id });
         res.status(201).json(newUser);
     } catch (err) {
         console.error(err);
@@ -116,3 +119,38 @@ exports.signin = async (req, res) => {
     }
 };
 
+
+
+exports.postUserPass = async (req, res, next) => {
+    try {
+        const { emailId, newPassword } = req.body;
+
+        console.log(emailId, newPassword);
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        const currUser = await User.findOne({ where: { email: emailId } });
+
+        if (!currUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const currUserPass = await Password.findAll({ where: { UserId: currUser.id } });
+
+        for (const currPass of currUserPass) {
+            const isMatch = await bcrypt.compare(newPassword, currPass.hashedPassword);
+            if (isMatch) {
+                return res.json({ success: false, message: 'This password already exists, please choose another' });
+            }
+        }
+
+        await Password.create({ hashedPassword, UserId: currUser.id });
+        await currUser.update({ password: hashedPassword });
+
+        res.status(200).json({ message: 'Password updated successfully' });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Something went wrong!' });
+    }
+};

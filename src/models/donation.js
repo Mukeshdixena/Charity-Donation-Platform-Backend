@@ -12,10 +12,23 @@ const Donation = sequelize.define(
             unique: true,
             allowNull: false,
         },
-        amountDonated: {
-            type: Sequelize.FLOAT,
+        paymentId: {
+            type: Sequelize.STRING,
             allowNull: false,
         },
+        amountDonated: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
+        charityOrgId: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+        },
+        userId: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+        },
+
     }
 );
 module.exports = Donation;
