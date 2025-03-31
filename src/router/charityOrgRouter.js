@@ -10,4 +10,5 @@ router.post('/api/postCharityOrg', charityOrgControllers.postCharityOrg);
 router.delete('/api/deleteCharityOrg/:CharityOrgId', charityOrgControllers.deleteCharityOrg);
 router.patch('/api/editCharityOrg/:CharityOrgId', charityOrgControllers.editCharityOrg);
 
+router.post('/api/postCharityOrgVerified/:charityOrgId', charityOrgControllers.postCharityOrgVerified);
 module.exports = router;

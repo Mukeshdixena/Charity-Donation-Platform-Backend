@@ -32,6 +32,11 @@ const CharityOrg = sequelize.define(
             type: Sequelize.STRING,
             allowNull: false,
         },
+        isVerified: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: false,
+        },
+
     }
 );
 module.exports = CharityOrg;

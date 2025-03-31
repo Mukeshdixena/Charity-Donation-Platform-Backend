@@ -104,6 +104,27 @@ exports.postOtpMail = async (req, res, next) => {
     }
 
 };
+exports.confirmation = async (req, res, next) => {
+    const { orderId, amountDonated, charityOrgId } = req.body;
+    const email = req.user.email;
+
+    const emailData = {
+        sender: { email: process.env.EMAIL_SENDER, name: "Your Service" },
+        to: [{ email }],
+        subject: "Donation Confirmation",
+        htmlContent: `<p>Thank you for your generous donation! Your order ID: <strong>${orderId}</strong>, Amount: <strong>${amountDonated}</strong>, Charity: <strong>${charityOrgId}</strong>. We appreciate your support!</p>
+`,
+    };
+
+    try {
+        await transEmailApi.sendTransacEmail(emailData);
+        res.json({ sent: true, message: "mail send successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ sent: false, message: "Failed to send" });
+    }
+
+};
 
 exports.verifyOtp = async (req, res) => {
     const { email, otp } = req.body;

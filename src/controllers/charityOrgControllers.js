@@ -37,6 +37,28 @@ exports.postCharityOrg = async (req, res, next) => {
         res.status(500).json({ message: 'Something went wrong!' });
     }
 };
+exports.postCharityOrgVerified = async (req, res, next) => {
+    try {
+        const { charityOrgId } = req.params;
+
+        console.log(charityOrgId)
+
+
+        if (!charityOrgId) {
+            return res.status(400).json({ message: 'not found' });
+        }
+
+        const charityOrgRecord = await CharityOrg.findByPk(charityOrgId);
+        if (!charityOrgRecord) {
+            return res.status(404).json({ message: 'charityOrg not found' });
+        }
+
+        const updatedCharityOrg = await charityOrgRecord.update({ isVerified: true });
+        res.status(200).json(updatedCharityOrg);
+    } catch (err) {
+        res.status(500).json({ message: 'Error updating charityOrg', error: err });
+    }
+};
 
 
 
