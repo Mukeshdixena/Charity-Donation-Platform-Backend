@@ -15,9 +15,8 @@ apiKey.apiKey = process.env.BREVO_API_KEY;
 
 const transEmailApi = new sib.TransactionalEmailsApi();
 
-const otpStore = {}; // Temporary storage for OTPs
+const otpStore = {};
 
-// Generate a 6-digit OTP
 const generateOTP = () => crypto.randomInt(100000, 999999).toString();
 
 

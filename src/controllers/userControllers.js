@@ -32,10 +32,8 @@ exports.postUser = async (req, res, next) => {
     try {
         const { username, email, contact, password } = req.body;
 
-        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create user
         const newUser = await User.create({
             username,
             email,
@@ -60,10 +58,8 @@ exports.postAdminUser = async (req, res, next) => {
             res.json({ message: 'WRONG HOST KEY' });
         }
 
-        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create user
         const newUser = await User.create({
             username,
             email,
@@ -166,7 +162,6 @@ exports.adminSignin = async (req, res) => {
             return res.json({ success: false, message: 'Email not found' });
         }
 
-        // Compare password
         const isMatch = await bcrypt.compare(password, currUser.password);
         if (!isMatch) {
             return res.json({ success: false, message: 'Incorrect password' });

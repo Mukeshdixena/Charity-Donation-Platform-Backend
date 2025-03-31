@@ -62,14 +62,12 @@ exports.postDonation = async (req, res, next) => {
         const userId = req.user.id;
         const { paymentId, amountDonated, charityOrgId } = req.body;
 
-        // Find the charity organization
         const charityOrg = await CharityOrg.findByPk(charityOrgId);
 
         if (!charityOrg) {
             return res.status(404).json({ message: 'Charity organization not found!' });
         }
 
-        // Create the donation
         const newDonation = await donation.create({
             paymentId,
             amountDonated,
@@ -77,10 +75,8 @@ exports.postDonation = async (req, res, next) => {
             userId
         });
 
-        // Reduce the required amount by the donated amount
         charityOrg.requiredAmount -= amountDonated;
-        await charityOrg.save(); // Save the updated charityOrg record
-
+        await charityOrg.save();
         res.status(201).json(newDonation);
     } catch (err) {
         console.error(err);
@@ -104,7 +100,6 @@ exports.getDonationFile = async (req, res, next) => {
         if (!fileUrl) throw new Error("Failed to upload file to S3");
 
         console.log({ FileUrl: fileUrl, UserId: userId });
-        // await ExpenseDownload.create({ fileUrl, UserId: userId });
 
         res.status(200).json({ fileUrl, success: true });
     } catch (error) {
