@@ -25,12 +25,15 @@ const User = sequelize.define(
         contact: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true,
         },
         password: {
             type: DataTypes.STRING,
             allowNull: false,
-        }
+        },
+        isAdmin: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     },
 );
 

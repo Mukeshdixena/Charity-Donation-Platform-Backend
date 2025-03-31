@@ -32,10 +32,6 @@ exports.getDonationByUser = async (req, res, next) => {
             where: { userId: userId }
         });
 
-        if (thisDonation.length === 0) {
-            return res.status(404).json({ message: 'Donation not found' });
-        }
-
         res.status(200).json(thisDonation);
     } catch (error) {
         next(error);

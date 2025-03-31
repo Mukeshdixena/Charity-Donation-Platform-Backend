@@ -2,6 +2,8 @@ const User = require('../models/user.js');
 const Password = require('../models/passwords');
 const { Sequelize } = require('sequelize');
 
+require('dotenv').config();
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 function generateAccestoken(id, name) {
@@ -39,6 +41,35 @@ exports.postUser = async (req, res, next) => {
             email,
             contact,
             password: hashedPassword
+        });
+
+        await Password.create({ hashedPassword, UserId: newUser.id });
+        res.status(201).json(newUser);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Something went wrong!' });
+    }
+};
+
+exports.postAdminUser = async (req, res, next) => {
+    try {
+        const { hostkey, username, email, contact, password } = req.body;
+
+        if (hostkey != process.env.HOST_KEY) {
+
+            res.json({ message: 'WRONG HOST KEY' });
+        }
+
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create user
+        const newUser = await User.create({
+            username,
+            email,
+            contact,
+            password: hashedPassword,
+            isAdmin: true
         });
 
         await Password.create({ hashedPassword, UserId: newUser.id });
@@ -102,6 +133,35 @@ exports.signin = async (req, res) => {
 
     try {
         const currUser = await User.findOne({ where: { email } });
+        if (!currUser) {
+            return res.json({ success: false, message: 'Email not found' });
+        }
+
+        const isMatch = await bcrypt.compare(password, currUser.password);
+        if (!isMatch) {
+            return res.json({ success: false, message: 'Incorrect password' });
+        }
+
+        res.json({ success: true, message: 'Login successful', token: generateAccestoken(currUser.id, currUser.name) });
+    } catch (error) {
+        console.error('Error during signin:', error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+};
+
+exports.adminSignin = async (req, res) => {
+    const { hostkey, email, password } = req.body;
+
+    if (hostkey != process.env.HOST_KEY) {
+
+        return res.json({ success: false, message: 'Wrong Host Key' });
+
+    }
+
+    try {
+        console.log(hostkey, email, password);
+        const currUser = await User.findOne({ where: { email } });
+        console.log(currUser);
         if (!currUser) {
             return res.json({ success: false, message: 'Email not found' });
         }
