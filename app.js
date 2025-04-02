@@ -1,14 +1,20 @@
+require('dotenv').config();
 const express = require("express");
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const app = express();
 const User = require('./src/models/user.js')
 const CharityOrg = require('./src/models/charityOrg.js')
 const Donation = require('./src/models/donation.js')
 const Passwords = require('./src/models/passwords.js')
 
-require('dotenv').config();
+const sequelize = require('./src/util/database.js');
 
+const userRouter = require('./src/router/userRouter.js');
+const charityOrgRouter = require('./src/router/charityOrgRouter.js');
+const paymentService = require('./src/router/paymentService.js');
+const donationRouter = require('./src/router/donationRouter.js');
+
+const app = express();
 
 app.use(cors({
     origin: '*',
@@ -22,12 +28,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const PORT = process.env.PORT || 3000;
 
-const sequelize = require('./src/util/database.js');
-
-const userRouter = require('./src/router/userRouter.js');
-const charityOrgRouter = require('./src/router/charityOrgRouter.js');
-const paymentService = require('./src/router/paymentService.js');
-const donationRouter = require('./src/router/donationRouter.js');
 
 app.use(userRouter);
 app.use(donationRouter);

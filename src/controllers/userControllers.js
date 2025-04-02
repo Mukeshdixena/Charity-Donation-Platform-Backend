@@ -2,7 +2,6 @@ const User = require('../models/user.js');
 const Password = require('../models/passwords');
 const { Sequelize } = require('sequelize');
 
-require('dotenv').config();
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
