@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        .profile-container {
+            margin: 50px auto;
+            max-width: 600px;
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .donation-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .donation-amount {
+            font-weight: bold;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin {
+            display: none;
+        }
+
+        .logout-link {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            font-size: 1em;
+            color: #ffffff;
+            text-decoration: none;
+            background-color: #333;
+            padding: 0.5em 1em;
+            border-radius: 5px;
+        }
+
+        .logout-link:hover {
+            background-color: #555;
+        }
+
+        .home-link {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            font-size: 1em;
+            color: #ffffff;
+            text-decoration: none;
+            background-color: #333;
+            padding: 0.5em 1em;
+            border-radius: 5px;
+        }
+
+        .home-link:hover {
+            background-color: #555;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1em 0;
+            font-size: 1.5em;
+            position: relative;
+        }
+
+        header h1 {
+            margin: 0;
+            text-align: center;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../config.js"></script>
+</head>
+
+<body>
+
+    <header>
+        <a href="./CharityHome.html" class="back-button home-link">Home</a>
+        <h1>Profile</h1>
+        <a href="../index.html" class="logout-link">logout</a>
+    </header>
+    <main class="container">
+        <div class="profile-container">
+            <div class="profile-header">
+                <h2>User Profile</h2>
+                <button class="btn btn-primary" id="edit-profile-btn">Edit Profile</button>
+            </div>
+
+            <div id="profile-details" class="mt-4">
+                <p><strong>Name:</strong> <span id="user-name"></span></p>
+                <p><strong>Email:</strong> <span id="user-email"></span></p>
+                <p><strong>Contact:</strong> <span id="user-contact"></span></p>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="profileModalLabel">Edit Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="profile-form">
+                        <div class="mb-3">
+                            <label for="editName" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="editName" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="editEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="editEmail" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="editContact" class="form-label">Contact</label>
+                            <input type="text" class="form-control" id="editContact" required />
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="save-profile-btn">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <main class="container mt-5 admin">
+        <section>
+            <h2>Charity Organizations Verification Requests</h2>
+            <table class="table table-bordered charity-list">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Charity Name</th>
+                        <th>Description</th>
+                        <th>Goal Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="charity-list-body">
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+
+
+    <button id="downloadDonationReport" onclick="downloadDonationReport()">Download Donation report</button>
+
+    <div class="container">
+        <h2>Your Donation History</h2>
+        <div id="donation-history"></div>
+    </div>
+
+
+
+    <script src="profile.js"></script>
+</body>
+
+</html>

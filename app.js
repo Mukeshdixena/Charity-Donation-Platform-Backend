@@ -1,14 +1,17 @@
 require('dotenv').config();
 const express = require("express");
 const cors = require('cors');
+const path = require('path');
 const bodyParser = require('body-parser');
-const User = require('./src/models/user.js')
-const CharityOrg = require('./src/models/charityOrg.js')
-const Donation = require('./src/models/donation.js')
-const Passwords = require('./src/models/passwords.js')
+
+const User = require('./src/models/user.js');
+const CharityOrg = require('./src/models/charityOrg.js');
+const Donation = require('./src/models/donation.js');
+const Passwords = require('./src/models/passwords.js');
 
 const sequelize = require('./src/util/database.js');
 
+// Routers
 const userRouter = require('./src/router/userRouter.js');
 const charityOrgRouter = require('./src/router/charityOrgRouter.js');
 const paymentService = require('./src/router/paymentService.js');
@@ -16,6 +19,7 @@ const donationRouter = require('./src/router/donationRouter.js');
 
 const app = express();
 
+// Enable CORS
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -23,31 +27,37 @@ app.use(cors({
     credentials: true
 }));
 
+// Body parsers
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const PORT = process.env.PORT || 3000;
+// Serve static frontend files
+app.use(express.static(path.join(__dirname, 'src/view')));
 
+// APIs - Prefix with /api
+app.use('/api', userRouter);
+app.use('/api', donationRouter);
+app.use('/api', paymentService);
+app.use('/api', charityOrgRouter);
 
-app.use(userRouter);
-app.use(donationRouter);
-app.use(paymentService);
-app.use(charityOrgRouter);
-
-
+// Sequelize model associations
 User.hasMany(Passwords);
 Passwords.belongsTo(User);
 
-app.get("/", (req, res) => {
-    res.send("jenkins Development, Express!");
+// Fallback: Send frontend for any unknown routes (like /about, /contact etc)
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'src/view', 'index.html'));
 });
 
+// Start the server
+const PORT = process.env.PORT || 3000;
+
 sequelize
-    // .sync({ force: true })
+    // .sync({ force: true }) // Uncomment if you want to drop and recreate tables
     .sync()
     .then(result => {
         app.listen(PORT, () => {
-            console.log(`Server is running on http://localhost:${PORT}`);
+            console.log(`✅ Server running at: http://localhost:${PORT}`);
         });
     })
-    .catch(err => console.error(err));
+    .catch(err => console.error('❌ Sequelize sync error:', err));
