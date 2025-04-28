@@ -13,15 +13,17 @@ async function signup() {
         const response = await axios.get(`${CONFIG.API_BASE_URL}/api/user`);
         console.log(response);
 
-        // const emailExists = response.data.some(({ email }) => email === currEmail);
+        const emailExists = response.data.some(({ email }) => email === currEmail);
 
-        // if (emailExists) {
-        //     alert('This email already exists. Please sign in.');
-        //     return;
-        // }
+        console.log(currEmail);
 
-        // await axios.post(`${CONFIG.API_BASE_URL}/api/user`, { username, email: currEmail, contact, password });
-        // window.location.href = '../index.html';
+        if (emailExists) {
+            alert('This email already exists. Please sign in.');
+        } else {
+            await axios.post(`${CONFIG.API_BASE_URL}/api/user`, { username, email: currEmail, contact, password });
+        }
+
+        window.location.href = '../index.html';
 
     } catch (error) {
         console.error('Error during signup:', error);
