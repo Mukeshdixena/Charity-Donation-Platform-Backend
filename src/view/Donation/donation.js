@@ -21,7 +21,7 @@ async function submitDonation() {
     alert(`Thank you for donating ₹${donationAmount} to ${charity.name}!`);
 
 
-    const responce = await axios.post(`${CONFIG.API_BASE_URL}/order`, { amount: donationAmount });
+    const responce = await axios.post(`${CONFIG.API_BASE_URL}/api/order`, { amount: donationAmount });
     console.log(responce.data);
     let checkoutOptions = {
         paymentSessionId: responce.data.paymentSessionId,

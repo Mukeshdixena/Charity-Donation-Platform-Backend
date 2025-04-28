@@ -4,10 +4,10 @@ const userAuth = require('../middleware/auth.js');
 
 const router = express.Router();
 
-router.post('/service/createOrder', cashfreeService.createOrder);
-router.get('/payment/paymentStatus/:orderId', cashfreeService.paymentStatus);
-router.post('/forgetPassword/postOtpMail', cashfreeService.postOtpMail);
-router.post('/forgetPassword/verifyOtp', cashfreeService.verifyOtp);
+router.post('/order', cashfreeService.createOrder);
+router.get('/paymentStatus/:orderId', cashfreeService.paymentStatus);
+router.post('/OtpMail', cashfreeService.postOtpMail);
+router.post('/verifyOtp', cashfreeService.verifyOtp);
 router.post('/donation/confirmation', userAuth.authonticate, cashfreeService.confirmation);
 
 module.exports = router;

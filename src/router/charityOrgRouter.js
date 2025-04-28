@@ -4,11 +4,11 @@ const charityOrgControllers = require('../controllers/charityOrgControllers.js')
 
 const router = express.Router();
 
-router.get('/api/getCharityOrgs', charityOrgControllers.getCharityOrgs);
-router.get('/api/getCharityOrgById/:charityOrgId', charityOrgControllers.getCharityOrgById);
-router.post('/api/postCharityOrg', charityOrgControllers.postCharityOrg);
-router.delete('/api/deleteCharityOrg/:CharityOrgId', charityOrgControllers.deleteCharityOrg);
-router.patch('/api/editCharityOrg/:CharityOrgId', charityOrgControllers.editCharityOrg);
+router.get('/charityOrgs', charityOrgControllers.getCharityOrgs);
+router.get('/charityOrgById/:charityOrgId', charityOrgControllers.getCharityOrgById);
+router.post('/charityOrg', charityOrgControllers.postCharityOrg);
+router.delete('/charityOrg/:CharityOrgId', charityOrgControllers.deleteCharityOrg);
+router.patch('/charityOrg/:CharityOrgId', charityOrgControllers.editCharityOrg);
 
-router.post('/api/postCharityOrgVerified/:charityOrgId', charityOrgControllers.postCharityOrgVerified);
+router.post('/charityOrgVerified/:charityOrgId', charityOrgControllers.postCharityOrgVerified);
 module.exports = router;

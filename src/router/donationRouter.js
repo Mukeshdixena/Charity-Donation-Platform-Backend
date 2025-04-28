@@ -5,11 +5,11 @@ const userAuth = require('../middleware/auth.js');
 
 const router = express.Router();
 
-router.get('/api/getDonations', donationControllers.getDonations);
-router.get('/api/getDonationById', donationControllers.getDonationById);
-router.get('/api/getDonationByUser', userAuth.authonticate, donationControllers.getDonationByUser);
-router.get('/api/getDonationByCharityOrg', donationControllers.getDonationByCharityOrg);
-router.post('/api/postDonation', userAuth.authonticate, donationControllers.postDonation);
+router.get('/donations', donationControllers.getDonations);
+router.get('/donationById', donationControllers.getDonationById);
+router.get('/donationByUser', userAuth.authonticate, donationControllers.getDonationByUser);
+router.get('/donationByCharityOrg', donationControllers.getDonationByCharityOrg);
+router.post('/donation', userAuth.authonticate, donationControllers.postDonation);
 
-router.get('/api/getDonationFile', userAuth.authonticate, donationControllers.getDonationFile);
+router.get('/donationFile', userAuth.authonticate, donationControllers.getDonationFile);
 module.exports = router;

@@ -8,7 +8,7 @@ async function signin() {
         return;
     }
 
-    const response = await axios.post(`${CONFIG.API_BASE_URL}/adminSignin`, {
+    const response = await axios.post(`${CONFIG.API_BASE_URL}/api/adminSignin`, {
         hostkey: hostkey,
         email: currEmail,
         password: currPassword

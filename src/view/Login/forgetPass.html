@@ -85,7 +85,7 @@
             }
 
             try {
-                const response = await axios.post(`${CONFIG.API_BASE_URL}/otpMail`, {
+                const response = await axios.post(`${CONFIG.API_BASE_URL}/api/otpMail`, {
                     email: emailId,
                 });
 
@@ -114,7 +114,7 @@
             }
 
             try {
-                const verifyResponse = await axios.post(`${CONFIG.API_BASE_URL}/verifyOtp`, {
+                const verifyResponse = await axios.post(`${CONFIG.API_BASE_URL}/api/verifyOtp`, {
                     email: emailId,
                     otp: otp,
                 });
