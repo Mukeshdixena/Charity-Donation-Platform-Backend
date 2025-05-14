@@ -77,28 +77,32 @@ exports.postAdminUser = async (req, res, next) => {
 
 
 
-exports.deleteUser = (req, res, next) => {
+exports.deleteUser = async (req, res, next) => {
     const { UserId } = req.params;
 
     if (!UserId) {
         return res.status(400).json({ message: 'UserId is required' });
     }
 
+    try {
 
-    User.findByPk(UserId)
-        .then(user => {
-            if (!user) {
-                return res.status(404).json({ message: 'user not found' });
-            }
-            return user.destroy();
-        })
-        .then(() => {
+        const user = await User.findByPk(UserId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'user not found' });
+        }
+        const status = await user.destroy();
+        if (status) {
+
             res.status(200).json({ message: 'user deleted successfully' });
-        })
-        .catch(err => {
-            console.error('Error deleting user:', err);
-            res.status(500).json({ message: 'Error deleting user', error: err });
-        });
+        }
+    } catch (err) {
+
+        console.error('Error deleting user:', err);
+        res.status(500).json({ message: 'Error deleting user', error: err });
+    }
+
+
 };
 
 exports.editUser = async (req, res, next) => {

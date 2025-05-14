@@ -106,7 +106,7 @@ async function fetchPaymentStatus(orderId) {
 
 function updateDonationHistory(donations) {
     const donationHistoryDiv = document.getElementById('donation-history');
-    donationHistoryDiv.innerHTML = ''; // Clear existing content
+    donationHistoryDiv.innerHTML = '';
 
     if (donations.length === 0) {
         donationHistoryDiv.innerHTML = '<p>No donations found.</p>';
@@ -164,7 +164,6 @@ async function downloadDonationReport() {
 
 document.addEventListener("DOMContentLoaded", async () => {
     try {
-        // Replace this with your actual API endpoint
         const response = await axios.get(`${CONFIG.API_BASE_URL}/api/charityOrgs`);
         const charities = response.data;
         console.log(charities);

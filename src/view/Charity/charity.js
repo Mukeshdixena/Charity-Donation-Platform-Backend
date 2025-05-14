@@ -156,7 +156,7 @@ function updateDonationHistory(donations) {
 
 async function fetchDonationHistory() {
     try {
-        const response = await fetch(`${CONFIG.API_BASE_URL}/api/donations`, { headers: { "Authorization": token } }); // Adjust the URL as needed
+        const response = await fetch(`${CONFIG.API_BASE_URL}/api/donations`, { headers: { "Authorization": token } });
         if (!response.ok) {
             throw new Error('Failed to fetch donation history');
         }
